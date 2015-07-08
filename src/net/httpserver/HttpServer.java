@@ -84,7 +84,7 @@ public class HttpServer {
 						socket.getOutputStream()));
 				
 				HttpRequest req = new HttpRequest(in);
-				HttpResponse res = new HttpResponse();
+				HttpResponse res = new HttpResponse(out, socket);
 				
 				if(req.path == null){
 					socket.close();
@@ -102,8 +102,10 @@ public class HttpServer {
 					res.statusCode = StatusCode.Not_Found;
 				}
 				
-				out.write(res.toString());
-				out.flush();
+				if(res.needsWrite){
+					out.write(res.toString());
+					out.flush();
+				}
 			} catch (Exception e) {
 				error(e);
 			} finally {
