@@ -86,8 +86,10 @@ public class HttpServer {
 				HttpRequest req = new HttpRequest(in);
 				HttpResponse res = new HttpResponse();
 				
-				if(req.path == null)
-					throw new NullPointerException();
+				if(req.path == null){
+					socket.close();
+					return;
+				}
 				
 				boolean handeled = false;
 				for(HttpRequestListener listener : reqListeners){
